@@ -84,11 +84,15 @@ void insert_search_remove(ARVORE_BINARIA* tree) {
 
     } else if( strcmp(option, "I") == 0 ) {
 
-
+        entrada_pessoa(tree);
+        
+        printf("Preorder\n");
+        AB_pre_order( tree );
+        printf("\n");
 
     } else if( strcmp(option, "R") == 0 ) {
 
-        printf("\nPreorder\n");
+        printf("Preorder\n");
         AB_pre_order( tree );
         printf("\n");
 

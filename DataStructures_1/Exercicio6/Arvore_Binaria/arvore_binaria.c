@@ -96,6 +96,43 @@ static NODE *AB_insert_node(NODE *root, PESSOA *pessoa) {
     return root;
 }
 
+/*
+ *  Funcao que encontra a posicao recusivamente e insere uma pessoa
+ */
+static void *AB_remove_cpf(NODE *root, char *CPF) {
+
+    // Caso base: node vazio
+    if (root == NULL) {
+
+        return NULL;
+    }
+    else {
+
+        int comp = strcmp(CPF, pessoa_get_cpf(root->pessoa) );
+
+        // Se o CPF for menor, procure para a esquerda
+        if ( comp < 0 ) {
+            AB_remove_cpf(root->esq, CPF);
+        }
+        // Se o CPF for maior, procure para a direita
+        if ( comp > 0 ) {
+            AB_remove_cpf(root->dir, CPF);   
+        }
+        // Se o CPF for igual, remova-o
+        if ( comp == 0 ) {
+            
+            // TODO: Remove node
+            // pessoa_destroy( node->pessoa );        
+            // free( node );
+            // node = NULL;
+
+        }
+
+    }
+
+    return root;
+}
+
 static NODE *AB_busca_cpf_recursivo(NODE *root, char* CPF) {
 
     if (root != NULL) {

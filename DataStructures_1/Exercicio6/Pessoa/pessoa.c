@@ -44,26 +44,13 @@ PESSOA* pessoa_create ( char *CPF, char *nome, char *idade, char *saldo ) {
 void pessoa_imprimir_cpf( PESSOA *pessoa) {
 
 	char *CPF = pessoa->CPF;
-	boolean zero_a_esquerda = TRUE;
 
 	for ( int i = 0; i < strlen(CPF); i++ ) {
-		
-		// Evita imprimir zeros a esquerda
-		if ( CPF[i] != '0') {
-
-			zero_a_esquerda = FALSE;
-		}
-		if ( zero_a_esquerda && CPF[i] == '0' ) {
-
-			continue;
-		}
-
 		// Compara com a tabela ASCII para imprimir somente numeros
-		else if ( CPF[i] > 47 && CPF[i] < 58 ) {
+		if ( CPF[i] > 47 && CPF[i] < 58 ) {
 		
 			printf("%c", CPF[i]);
 		}
-
 	}
 
 	printf("\n");
