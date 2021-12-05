@@ -10,4 +10,6 @@ void boolean_print(boolean bool);
 
 char *readLine();
 
+char *readUntil(char stopChar);
+
 #endif //UTIL_H

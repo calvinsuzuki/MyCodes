@@ -11,8 +11,6 @@
 #include "Util/Util.h"
 #include "Arvore_Binaria/arvore_binaria.h"
 
-#define TAM 50
-
 void entrada_pessoa(ARVORE_BINARIA* tree);
 void insert_search_remove(ARVORE_BINARIA* tree);
 
@@ -22,7 +20,7 @@ int main() {
     
     int num_of_input;
 
-    scanf(" %d", &num_of_input );
+    scanf(" %d%*c", &num_of_input );
 
     for( int i = 0; i < num_of_input; i++) {
 
@@ -30,6 +28,8 @@ int main() {
     }
 
     insert_search_remove(tree);
+
+    printf("\n");
 
     AB_destroy( tree );
 
@@ -43,18 +43,13 @@ void entrada_pessoa(ARVORE_BINARIA* tree) {
 
     PESSOA* newPessoa;
 
-    char* CPF = (char *) calloc(TAM, sizeof(char) );
-    char* nome = (char *) calloc(TAM, sizeof(char) );
-    char* idade = (char *) calloc(TAM, sizeof(char) );
-    char* saldo = (char *) calloc(TAM, sizeof(char) );
+    char* CPF = readUntil(';'); //Le até encontrar ';'
 
-    scanf(" %[^;]%*c", CPF);  //Le até encontrar ';'
+    char* nome = readUntil(';');
 
-    scanf(" %[^;]%*c", nome);
+    char* idade = readUntil(';');
 
-    scanf(" %[^;]%*c", idade);
-
-    scanf(" %[^(\r|\n)]%*c", saldo); //Le até encontrar '\n' ou '\r'
+    char* saldo = readLine();
 
     newPessoa = pessoa_create( CPF, nome, idade, saldo );
     AB_insert_pessoa( tree, newPessoa );
@@ -82,23 +77,33 @@ void insert_search_remove(ARVORE_BINARIA* tree) {
 
         AB_busca_cpf( tree, CPF);
 
+        free( CPF );    
+
     } else if( strcmp(option, "I") == 0 ) {
 
         entrada_pessoa(tree);
         
         printf("Preorder\n");
         AB_pre_order( tree );
-        printf("\n");
+        
 
     } else if( strcmp(option, "R") == 0 ) {
 
+        char* CPF = readLine();
+
+        AB_remove_cpf( tree, CPF );
+
         printf("Preorder\n");
         AB_pre_order( tree );
-        printf("\n");
+
+        free( CPF );        
+        
 
     } else {
 
         printf("Erro! Opcao nao encontrada!");
     }
+
+    free( option );
 
 }

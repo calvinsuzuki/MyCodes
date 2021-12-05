@@ -14,7 +14,8 @@ typedef struct node_st NODE;
 
 static NODE *AB_node_create(PESSOA *pessoa);
 static NODE *AB_insert_node(NODE *root, PESSOA *pessoa);
-static NODE *AB_busca_cpf_recursivo(NODE *root, char* CPF);
+static boolean AB_remove_cpf_recursivo(NODE **raiz, char *CPF);
+static void troca_min_direita(NODE *troca, NODE *root, NODE *ant);
 static void pre_order(NODE *root);
 static void in_order(NODE *root);
 static void post_order(NODE *root);
@@ -99,40 +100,86 @@ static NODE *AB_insert_node(NODE *root, PESSOA *pessoa) {
 /*
  *  Funcao que encontra a posicao recusivamente e insere uma pessoa
  */
-static void *AB_remove_cpf(NODE *root, char *CPF) {
+static boolean AB_remove_cpf_recursivo(NODE **root, char *CPF) {
+    NODE *node;
+    if(*root == NULL)
+    {
+        return FALSE;
+    }
 
-    // Caso base: node vazio
-    if (root == NULL) {
+    int comp = strcmp(pessoa_get_cpf((*root)->pessoa), CPF);
+    if ( comp == 0 ) {
 
-        return NULL;
+        pessoa_imprimir( (*root)->pessoa );
+
+        // Caso NENHUM ou UM filho do nó
+        if ( (*root)->esq == NULL || (*root)->dir == NULL ) {
+            node = *root;
+            if((*root)->esq == NULL) {
+                *root = (*root)->dir;
+            }
+            else {
+                *root = (*root)->esq;
+            }
+            //pessoa_destroy( node->pessoa );    
+            free(node);                 
+            node = NULL;
+        }
+        else /*Caso 3: há ambos os filhos*/
+        {
+            troca_min_direita((*root)->dir, (*root), (*root));
+        }
+        return TRUE;
     }
     else {
-
-        int comp = strcmp(CPF, pessoa_get_cpf(root->pessoa) );
-
-        // Se o CPF for menor, procure para a esquerda
-        if ( comp < 0 ) {
-            AB_remove_cpf(root->esq, CPF);
-        }
-        // Se o CPF for maior, procure para a direita
-        if ( comp > 0 ) {
-            AB_remove_cpf(root->dir, CPF);   
-        }
-        // Se o CPF for igual, remova-o
-        if ( comp == 0 ) {
-            
-            // TODO: Remove node
-            // pessoa_destroy( node->pessoa );        
-            // free( node );
-            // node = NULL;
-
-        }
-
+        if( comp < 0 )
+            return AB_remove_cpf_recursivo(&(*root)->esq, CPF);
+        if( comp > 0 )
+            return AB_remove_cpf_recursivo(&(*root)->dir, CPF);
     }
 
-    return root;
+    return FALSE;
 }
 
+/*
+ *  Troca o argumento 'root' pelo menor numero a direita, e o deleta
+ */
+static void troca_min_direita(NODE *troca, NODE *root, NODE *ant) {
+
+    if(troca->esq != NULL)
+    {
+        troca_min_direita(troca->esq, root, troca);
+        return;
+    }
+    if(root == ant) {
+        ant->dir = troca->dir;
+    }
+    else {
+        ant->esq = troca->dir;
+    }
+
+    root->pessoa = troca->pessoa;
+
+    free( troca );
+    troca = NULL;
+}
+
+/*
+ *  Remove uma pessoa pelo CPF na arvore
+ */
+boolean AB_remove_cpf( ARVORE_BINARIA *tree, char *CPF ) {
+
+    if( tree != NULL ) {
+
+        return AB_remove_cpf_recursivo(&(tree)->root, CPF);
+    }
+
+    return FALSE;
+}
+
+/*
+ *  Funcao recursiva que busca um item na arvore usando o CPF como chave
+ */
 static NODE *AB_busca_cpf_recursivo(NODE *root, char* CPF) {
 
     if (root != NULL) {

@@ -36,9 +36,14 @@ void AB_in_order(ARVORE_BINARIA *tree);
 void AB_post_order(ARVORE_BINARIA *tree);
 
 /*
+ *  Remove uma pessoa pelo CPF na arvore
+ */
+boolean AB_remove_cpf( ARVORE_BINARIA *tree, char *CPF );
+
+/*
  *  Busca e imprime uma pessoa pelo seu CPF
  */
-boolean AB_busca_cpf( ARVORE_BINARIA *tree, char* CPF );
+boolean AB_busca_cpf( ARVORE_BINARIA *tree, char *CPF );
 
 /*
  *  Libera toda a memoria da arvore
