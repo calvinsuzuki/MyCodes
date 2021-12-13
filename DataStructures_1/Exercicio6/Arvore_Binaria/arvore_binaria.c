@@ -121,12 +121,12 @@ static boolean AB_remove_cpf_recursivo(NODE **root, char *CPF) {
             else {
                 *root = (*root)->esq;
             }
-            //pessoa_destroy( node->pessoa );    
             free(node);                 
             node = NULL;
         }
-        else /*Caso 3: há ambos os filhos*/
-        {
+        // Caso ambos os DOIS filhos
+        else 
+        {   
             troca_min_direita((*root)->dir, (*root), (*root));
         }
         return TRUE;
@@ -158,8 +158,10 @@ static void troca_min_direita(NODE *troca, NODE *root, NODE *ant) {
         ant->esq = troca->dir;
     }
 
-    root->pessoa = troca->pessoa;
+    // Deleta a pessoa antes de ser substituida (memory leak)
+    pessoa_destroy ( root->pessoa );
 
+    root->pessoa = troca->pessoa;
     free( troca );
     troca = NULL;
 }
