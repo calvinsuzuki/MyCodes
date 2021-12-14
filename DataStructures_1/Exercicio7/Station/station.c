@@ -49,6 +49,19 @@ STATION* Station_getBelow(STATION *station) {
 	return station->below;
 }
 
+int Station_getOrigin(STATION *station) {
+	return station->origin;
+}
+
+int Station_getDestiny(STATION *station) {
+	return station->destiny;
+}
+
+void Station_print(STATION *station) {
+
+	printf("Origin: %d\nDestiny: %d\nDistance: %f", station->origin, station->destiny, station->distance);
+}
+
 void Station_destroy(STATION **station) {
 
 	if( (*station)->right != NULL ) {
@@ -79,13 +92,7 @@ void Station_destroy(STATION **station) {
 // 	return;
 // }
 
-// int Station_getOrigin(STATION *station) {
-// 	return station->origin;
-// }
 
-// int Station_getDestiny(STATION *station) {
-// 	return station->destiny;
-// }
 
 // float Station_getDistance(STATION *station) {
 // 	return station_getDistance;

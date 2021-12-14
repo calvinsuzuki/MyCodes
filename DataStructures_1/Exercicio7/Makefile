@@ -1,4 +1,4 @@
-UTIL=Station/station.c Matriz_Esparsa/matriz_esparsa.c Util/Util.c
+UTIL=Station/station.c Sparse_Matrix/sparse_matrix.c Util/Util.c
 MAIN=main.c
 BINARY=Main
 ZIP=Ex7
