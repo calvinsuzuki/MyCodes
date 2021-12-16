@@ -11,8 +11,8 @@
 #include "station.h"
 
 struct _station {
-    int origin;
-    int destiny;
+    int origin;  // Row
+    int destiny; // Column
     float distance;
     STATION *right;
     STATION *below;
@@ -22,13 +22,20 @@ STATION* Station_create(int origin, int destiny, float distance) {
 
 	STATION *station = (STATION*) malloc( sizeof(STATION) );
 
-	station->origin = origin;
-	station->destiny = destiny;
-	station->distance = distance;
-	station->right = NULL;
-	station->below = NULL;
+	if (station != NULL) {
+		station->origin = origin;
+		station->destiny = destiny;
+		station->distance = distance;
+		station->right = NULL;
+		station->below = NULL;	
+	}
 
 	return station;
+}
+
+STATION** Station_allocArray( int arraySize ) {
+
+	return ( (STATION **) malloc( sizeof(STATION*) * arraySize) );
 }
 
 void Station_setRight(STATION *station, STATION *right) {
@@ -59,17 +66,16 @@ int Station_getDestiny(STATION *station) {
 
 void Station_print(STATION *station) {
 
-	printf("Origin: %d\nDestiny: %d\nDistance: %f", station->origin, station->destiny, station->distance);
+	printf("\n\nOrigin: %d# Destiny: %d# Distance: %fKm\n", station->origin, station->destiny, station->distance);
 }
 
 void Station_destroy(STATION **station) {
 
-	if( (*station)->right != NULL ) {
+	if( (*station)->right != NULL ) 
 		free( (*station)->right);
-	}	
-	if( (*station)->below != NULL ) {
-		free( (*station)->below);
-	}
+	
+	if( (*station)->below != NULL ) 
+		free( (*station)->below);	
 
 	free( (*station) );
 	*station = NULL;
