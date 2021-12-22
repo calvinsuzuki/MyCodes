@@ -10,6 +10,8 @@
 #include <string.h>
 #include "sparse_matrix.h"
 
+static boolean pathFinder_recursive( SPARSE_MATRIX *matrix, STATION* station, int destiny);
+
 struct _SparseMatrix {
 
     STATION **row;
@@ -18,6 +20,9 @@ struct _SparseMatrix {
     int num_of_columns;
 };
 
+/*
+ *  Instancia o TAD Sparse_Matrix
+ */
 SPARSE_MATRIX *SparseMatrix_create (int num_of_rows, int num_of_columns ) {
 
     SPARSE_MATRIX *matrix = (SPARSE_MATRIX *) malloc( sizeof(SPARSE_MATRIX) );
@@ -32,84 +37,90 @@ SPARSE_MATRIX *SparseMatrix_create (int num_of_rows, int num_of_columns ) {
 
         if (matrix->column != NULL && matrix->row != NULL) {
 
-            for (int i = 0; i < num_of_columns; i++) matrix->column[i] = NULL;
+            for (int i = 0; i < num_of_columns; i++)
+                matrix->column[i] = NULL;
             
-            for (int i = 0; i < num_of_rows; i++) matrix->row[i] = NULL;
+            for (int i = 0; i < num_of_rows; i++)
+                matrix->row[i] = NULL;
         }
     }
 
     return matrix;
 }
 
+/*
+ *  Adiciona Stations pelos Rows
+ */
 boolean SparseMatrix_setStation( SPARSE_MATRIX *matrix, int origin, int destiny, float distance) {
 
     STATION *station;
-    STATION *columnStation;
-    STATION *prevColumnStation = NULL;
+    STATION *rowStation;
+    STATION *prevRowStation = NULL;
 
     if( origin > matrix->num_of_rows || destiny > matrix->num_of_columns ) 
-        return FALSE; // Row or Columns invalid error
+        return FALSE; // Row or Columns invalid
 
     station = Station_create( origin, destiny, distance );
 
     if ( station == NULL)
         return FALSE; // Allocation error
 
-    columnStation = matrix->column[ destiny ];
+    rowStation = matrix->row[ origin ];
 
     boolean isInserted = FALSE;
 
-    while( columnStation != NULL && !isInserted ) {
+    while( rowStation != NULL && !isInserted ) {
 
-        if( Station_getOrigin( columnStation ) < origin ) {
+        if( Station_getDestiny( rowStation ) < destiny ) {
 
-            prevColumnStation = columnStation;
+            prevRowStation = rowStation;
 
-            columnStation = Station_getBelow( columnStation );
+            rowStation = Station_getRight( rowStation );
         }
         else {
 
-            if ( prevColumnStation == NULL ) 
-                matrix->column[ destiny ] = station;
+            if ( prevRowStation == NULL ) 
+                matrix->row[ origin ] = station;
             else 
-                Station_setBelow( prevColumnStation, station );
+                prevRowStation = Station_setRight( prevRowStation, station );
 
-            Station_setBelow( station, columnStation );
+            station = Station_setRight( station, rowStation );
 
             isInserted = TRUE;
         }
     }
 
-    if ( columnStation == NULL ) {
+    if ( rowStation == NULL ) {
 
-        if ( prevColumnStation == NULL ) 
-            matrix->column[ destiny ] = station;
+        if ( prevRowStation == NULL ) 
+            matrix->row[ origin ] = station;
         else 
-            Station_setBelow( prevColumnStation, station );
+            prevRowStation = Station_setRight( prevRowStation, station );
     }
 
     return TRUE;
+} 
 
-}   
+/*
+ *  Funcao verifica se ha um caminho de uma origem ate um destino 
+ */
+boolean SparseMatrix_pathFinder ( SPARSE_MATRIX *matrix, int origin, int destiny ) {
 
-void SparseMatrix_print (SPARSE_MATRIX *matrix) {
+    if( matrix == NULL)
+        return FALSE;
 
-    for (int i = 0; i < matrix->num_of_columns; i++) {
+    if ( matrix->row[ origin ] != NULL ) {
 
-        if( matrix->column[i] != NULL ) {
+        return pathFinder_recursive( matrix, matrix->row[ origin ], destiny);
 
-            STATION *station = Station_getBelow( matrix->column[i] );
-
-            while (station != NULL) {
-
-                printf("mamaco\n");
-                Station_print( station );
-                station = Station_getBelow( station );
-            }
-        }
     }
+
+    return FALSE;
 }
 
+/*
+ *  Limpa a memoria da matriz
+ */
 void SparseMatrix_destroy (SPARSE_MATRIX **matrix) {
 
     for (int i = 0; i < (*matrix)->num_of_rows; i++) {
@@ -123,7 +134,7 @@ void SparseMatrix_destroy (SPARSE_MATRIX **matrix) {
                 STATION *prevStation = station;
                 station = Station_getRight( station );
 
-                free(prevStation);
+                free( prevStation );
                 prevStation = NULL;
             }
         }
@@ -140,4 +151,27 @@ void SparseMatrix_destroy (SPARSE_MATRIX **matrix) {
 
     free((*matrix));
     *matrix = NULL;
+}
+
+/*
+ *  Funcao verifica se ha um caminho de uma origem ate um destino recursivamente
+ */
+static boolean pathFinder_recursive( SPARSE_MATRIX *matrix, STATION* station, int destiny) {
+
+    boolean result = FALSE;
+
+    if( station != NULL ) {
+
+        if( Station_getDestiny( station ) == destiny ) 
+            return TRUE;
+
+        // Procura se há o destino na Station à direita
+        result = pathFinder_recursive( matrix, Station_getRight(station), destiny );
+        
+        // Se nao houver, visitar uma outra Cidade à procura do destino
+        if ( !result )
+            result = pathFinder_recursive( matrix, matrix->row[ Station_getDestiny( station ) ], destiny );
+    } 
+
+    return result;
 }

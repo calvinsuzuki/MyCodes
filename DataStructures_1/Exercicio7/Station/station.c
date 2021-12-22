@@ -18,6 +18,9 @@ struct _station {
     STATION *below;
 };
 
+/*
+ *  Instancia o TAD Sparse_Matrix
+ */
 STATION* Station_create(int origin, int destiny, float distance) {
 
 	STATION *station = (STATION*) malloc( sizeof(STATION) );
@@ -33,19 +36,22 @@ STATION* Station_create(int origin, int destiny, float distance) {
 	return station;
 }
 
+/*
+ *  Aloca um Array de Stations
+ */
 STATION** Station_allocArray( int arraySize ) {
 
 	return ( (STATION **) malloc( sizeof(STATION*) * arraySize) );
 }
 
-void Station_setRight(STATION *station, STATION *right) {
+STATION* Station_setRight(STATION *station, STATION *right) {
 	station->right = right;
-	return;
+	return station;
 }
 
-void Station_setBelow(STATION *station, STATION *below) {
+STATION* Station_setBelow(STATION *station, STATION *below) {
 	station->below = below;
-	return;
+	return station;
 }
 
 STATION* Station_getRight(STATION *station) {
@@ -63,43 +69,3 @@ int Station_getOrigin(STATION *station) {
 int Station_getDestiny(STATION *station) {
 	return station->destiny;
 }
-
-void Station_print(STATION *station) {
-
-	printf("\n\nOrigin: %d# Destiny: %d# Distance: %fKm\n", station->origin, station->destiny, station->distance);
-}
-
-void Station_destroy(STATION **station) {
-
-	if( (*station)->right != NULL ) 
-		free( (*station)->right);
-	
-	if( (*station)->below != NULL ) 
-		free( (*station)->below);	
-
-	free( (*station) );
-	*station = NULL;
-
-	return;
-}
-
-// void Station_setOrigin(STATION *station, int origin) {
-// 	station->origin = origin;
-// 	return;
-// }
-
-// void Station_setDestiny(STATION *station, int destiny) {
-// 	station->destiny = destiny;
-// 	return;
-// }
-
-// void Station_setDistance(STATION *station, float distance) {
-// 	station->distance = distance;
-// 	return;
-// }
-
-
-
-// float Station_getDistance(STATION *station) {
-// 	return station_getDistance;
-// }
