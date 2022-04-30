@@ -182,18 +182,29 @@ def Tire():
 def Car():
     
     car = [
-        (-2, .4),
+        (-2.2, .4),
         (2, .4),
-        (2, 2.2),
-        (-.2, 2.2),
-        (-.85, 1.4),
-        (-2, 1.4),
-        (-2, .4)
+        (2, 1),
+        (1.5, 1.8),
+        (-.2, 1.8),
+        (-.85, 1),
+        (-2.2, 1),
+        (-2.2, .4)
         ]
     
     return np.array(car)
 
-    #car = __triangularization(southAmerica)
+def Ground(): 
+    
+    ground = [
+        (-2, 0),
+        (2, 0),
+        (2, .9),
+        (-2, .9),
+        (-2, 0)
+        ]
+
+    return ground
 
 def Stars():
     # Star points

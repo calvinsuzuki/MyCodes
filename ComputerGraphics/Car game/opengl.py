@@ -28,18 +28,19 @@ def key_event(window,key,scancode,action,mods):
             dtheta = -0.1
 
 
-    print('[key event] key=',key)
-    print('[key event] scancode=',scancode)
-    print('[key event] action=',action)
-    print('[key event] mods=',mods)
-    print('-------')
+    # print('[key event] key=',key)
+    # print('[key event] scancode=',scancode)
+    # print('[key event] action=',action)
+    # print('[key event] mods=',mods)
+    # print('-------')
 
 # Catching mouse events
 def mouse_event(window,button,action,mods):
-    print('[mouse event] button=',button)
-    print('[mouse event] action=',action)
-    print('[mouse event] mods=',mods)
-    print('-------')
+    pass
+    # print('[mouse event] button=',button)
+    # print('[mouse event] action=',action)
+    # print('[mouse event] mods=',mods)
+    # print('-------')
 
 def createWindow(width, height, name):
 
