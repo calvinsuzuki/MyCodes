@@ -143,9 +143,8 @@ aux1 += len(ground)
 vertices['position'][aux0:aux1] = ground
 
 # Sets the GPU Buffer
-gh.setGPUBuffer(program, vertices)
+gh.GPUBuffer(program, vertices)
 
-global loc_color
 loc_color = glGetUniformLocation(program, "color")
 
 # set all the initial values of the variables to 0, to avoid problems with division
@@ -165,22 +164,20 @@ while not glfw.window_should_close(window):
     glClear(GL_COLOR_BUFFER_BIT)
 
     # set background color
-    glClearColor(0.4, 0.6, 0.4, 1.0)
+    glClearColor(0.4, 0.6, 0.4, 1.0) # grass green
 
     loc = glGetUniformLocation(program, "mat_transformation")
 
-    theta += gh.dtheta
+    #  verify the rotation limit before vary the angle
+    if abs(theta + gh.dtheta) < .5 :
+        theta += gh.dtheta
+    #  verify the translation limit before vary the angle
+    if abs(tx + gh.dt_x) < 1 :
+        tx += gh.dt_x
+    if abs(ty + gh.dt_y) < 1 :
+        ty += gh.dt_y    
 
-    # this verification don't let the car get out of the window
-    if 1 > abs(tx + gh.dt_x*np.cos(theta) - gh.dt_y*np.sin(theta)):
-        tx = tx + gh.dt_x*np.cos(theta) - gh.dt_y*np.sin(theta)
-    if 1 > abs(ty + gh.dt_x*np.sin(theta) + gh.dt_y*np.cos(theta)):
-        ty = ty + gh.dt_x*np.sin(theta) + gh.dt_y*np.cos(theta)
-
-    #  sets a rotation limit, then flips the car
-    if theta > 0.5 : theta = 0.5
-    elif theta < -0.5 : theta = -0.5
-
+    # resets the variations values
     gh.dt_x = 0
     gh.dt_y = 0
     gh.dtheta = 0
@@ -195,7 +192,8 @@ while not glfw.window_should_close(window):
     rectangle( color=(1,1,0), s = 10, x = -120+t%250, y = -20 )
     rectangle( color=(1,1,0), s = 10, x = -120+(t+80)%250, y = -20 )
     rectangle( color=(1,1,0), s = 10, x = -120+(t+160)%250, y = -20 )
-    
+
+    # cars    
     if t%250 < 2 :
         color1 = (np.random.rand(), np.random.rand(), np.random.rand())
     if (t+120)%250 < 2:

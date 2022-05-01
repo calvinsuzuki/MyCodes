@@ -6,8 +6,6 @@ import numpy as np
 dt_x, dt_y = 0, 0
 dtheta = 0
 
-dtheta = 0
-
 # Catching keyboard events 
 def key_event(window,key,scancode,action,mods):
     
@@ -28,19 +26,18 @@ def key_event(window,key,scancode,action,mods):
             dtheta = -0.1
 
 
-    # print('[key event] key=',key)
-    # print('[key event] scancode=',scancode)
-    # print('[key event] action=',action)
-    # print('[key event] mods=',mods)
-    # print('-------')
+    print('[key event] key=',key)
+    print('[key event] scancode=',scancode)
+    print('[key event] action=',action)
+    print('[key event] mods=',mods)
+    print('-------')
 
 # Catching mouse events
 def mouse_event(window,button,action,mods):
-    pass
-    # print('[mouse event] button=',button)
-    # print('[mouse event] action=',action)
-    # print('[mouse event] mods=',mods)
-    # print('-------')
+    print('[mouse event] button=',button)
+    print('[mouse event] action=',action)
+    print('[mouse event] mods=',mods)
+    print('-------')
 
 def createWindow(width, height, name):
 
@@ -108,7 +105,7 @@ def configGPU():
 
     return program
 
-def setGPUBuffer(program, vertices ):
+def GPUBuffer(program, vertices ):
     # Request a buffer slot from GPU
     buffer = glGenBuffers(1)
     # Make this buffer the default one
