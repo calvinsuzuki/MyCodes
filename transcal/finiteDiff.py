@@ -4,19 +4,32 @@ from matplotlib import pyplot as plt
 
 class finiteDiff :
 
+    def __init__( self, fluidTemp, fluidConvection ) :
+        self.fluidTemp = fluidTemp
+        self.fluidConvection = fluidConvection
+
     def __setLimits( self, X, Y ) :
-        xBorder = (max(X)-min(X)) * .1 + 1
-        yBorder = (max(Y)-min(Y)) * .1 + 1
-        self.xlim = ( min(X)-xBorder, max(X)+xBorder )
-        self.ylim = ( min(Y)-yBorder, max(Y)+yBorder )
+        
+        self.minX, self.maxX = min(X), max(X)
+        self.minY, self.maxY = min(Y), max(Y)
+
+        xBorder = self.maxX-self.minX
+        yBorder = self.maxY-self.minY
+
+        border = max(xBorder, yBorder) * .6
+
+        self.markerSize = 5 + int( 10 * np.exp( -border ) )
+        
+        self.xlim = ( -border, border )
+        self.ylim = ( -border, border )
 
     def insertPoints( self, points ) :
-
-        self.elements = [ ]
 
         X, Y = zip(*points)
 
         self.__setLimits( X, Y )
+
+        self.elements = [ ]
 
         for point in points : 
             self.elements.append( Element( x = point[0], y = point[1] ) )
@@ -27,9 +40,21 @@ class finiteDiff :
         plt.xlim( self.xlim )
         plt.ylim( self.ylim )
         plt.grid()
+
+        
         for element in self.elements : 
-            plt.plot( element.x, element.y, marker="o", markersize=10, markerfacecolor="green" )
-            print( "->(" + str(element.x) + ", " + str(element.y) + ")")
+
+            if element.x == self.minX : 
+                plt.plot( [self.minX, self.maxX], [element.y, element.y], 'k--', alpha=.4)
+
+            if element.y == self.minX : 
+                plt.plot( [element.x, element.x], [self.minY, self.maxY], 'k--', alpha=.4)
+
+            plt.plot( element.x, element.y, marker="o", markersize=self.markerSize, 
+            markerfacecolor=element.color,  markeredgecolor='none' )
+
+            
+                
         plt.show()
 
         print( len(self.elements) )
@@ -45,6 +70,3 @@ class finiteDiff :
         for i in X : 
             for j in Y :
                 self.elements.append( Element( x = i, y = j ) )
-                print( "(" + str(i) + ", " + str(j) + ")")
-
-    
