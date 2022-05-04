@@ -6,8 +6,6 @@ import numpy as np
 dt_x, dt_y = 0, 0
 dtheta = 0
 
-dtheta = 0
-
 # Catching keyboard events 
 def key_event(window,key,scancode,action,mods):
     
@@ -107,7 +105,7 @@ def configGPU():
 
     return program
 
-def setGPUBuffer(program, vertices ):
+def GPUBuffer(program, vertices ):
     # Request a buffer slot from GPU
     buffer = glGenBuffers(1)
     # Make this buffer the default one
