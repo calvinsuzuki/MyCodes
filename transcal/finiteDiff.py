@@ -41,19 +41,15 @@ class finiteDiff :
         plt.ylim( self.ylim )
         plt.grid()
 
-        
         for element in self.elements : 
-
+            # Place the horizontal and vertical lines
             if element.x == self.minX : 
                 plt.plot( [self.minX, self.maxX], [element.y, element.y], 'k--', alpha=.4)
-
             if element.y == self.minX : 
                 plt.plot( [element.x, element.x], [self.minY, self.maxY], 'k--', alpha=.4)
-
+            # Plot the elements
             plt.plot( element.x, element.y, marker="o", markersize=self.markerSize, 
             markerfacecolor=element.color,  markeredgecolor='none' )
-
-            
                 
         plt.show()
 
